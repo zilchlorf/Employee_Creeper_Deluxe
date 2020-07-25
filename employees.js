@@ -37,10 +37,10 @@ function start() {
                 ViewAllEmployees();
             }
             else if (answer.startCommand === "View all roles") {
-                //   bidAuction();
+                ViewAllRoles();
             }
             else if (answer.startCommand === "View all departments") {
-                //   postAuction();
+                ViewAllDepartments();
             }
             else if (answer.startCommand === "Add employee") {
                 CreateNewEmployee();
@@ -60,7 +60,7 @@ function start() {
         });
 }
 function ViewAllEmployees() {
-   
+
     // query the database for all items being auctioned
     connection.query("SELECT * FROM employee", function (err, results) {
         if (err) throw err;
@@ -69,7 +69,32 @@ function ViewAllEmployees() {
         // function to handle posting new items up for auction
     });
 }
+function ViewAllRoles() {
+
+    // query the database for all items being auctioned
+    connection.query("SELECT * FROM role", function (err, results) {
+        if (err) throw err;
+        console.log(cTable.getTable(results));
+        start();
+        // function to handle posting new items up for auction
+    });
+}
+function ViewAllDepartments() {
+
+    // query the database for all items being auctioned
+    connection.query("SELECT * FROM department", function (err, results) {
+        if (err) throw err;
+        console.log(cTable.getTable(results));
+        start();
+        // function to handle posting new items up for auction
+    });
+}
+
+
 function CreateNewEmployee() {
+let roles = ["Contract Worker", "Human Resources", "Accounts Receivable"]
+let manager = ["No manager","Mrs. Aetch Are", "Sir Meistro Contractor", "Mr. Account Lord" ]
+
     // prompt for info about the item being put up for auction
     inquirer
         .prompt([
@@ -87,13 +112,13 @@ function CreateNewEmployee() {
                 name: "role",
                 type: "list",
                 message: "What is the employee's role?",
-                choices: ["Contract Worker", "Human Resources", "Accounts Receivable"]
+                choices: roles
             },
             {
                 name: "manager",
                 type: "list",
                 message: "Who is the employee's manager?",
-                choices: ["Mrs. Aetch Are", "Sir Meistro Contractor", "Mr. Account Lord", "No manager"]
+                choices: manager
             }
         ])
         .then(function (answer) {

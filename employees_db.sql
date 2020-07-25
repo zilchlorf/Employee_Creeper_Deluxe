@@ -4,7 +4,7 @@ USE employees_db;
 
 CREATE TABLE department(
 id INTEGER NOT NULL AUTO_INCREMENT,
-name VARCHAR(30) NOT NULL,
+department_name VARCHAR(30) NOT NULL,
 PRIMARY KEY (id)
 );
 
@@ -20,8 +20,8 @@ CREATE TABLE employee(
 id INTEGER NOT NULL AUTO_INCREMENT,
 first_name VARCHAR(30) NOT NULL,
 last_name VARCHAR(30) NOT NULL,
-role_id INTEGER(30) NOT NULL,
-manager_id INTEGER,
+role_id VARCHAR(30) NOT NULL,
+manager_id VARCHAR(30),
 PRIMARY KEY (id)
 );
 
@@ -35,7 +35,7 @@ VALUES ("HR clerk", 10000, 1),
 ("Interpreter", 30000, 2),
 ("Accountant", 50000, 3);
 
-INSERT INTO department (name)
+INSERT INTO department (department_name)
 VALUES ("Contract Worker"),
 ("Human Resources"),
 ("Accounts Receivable");

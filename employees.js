@@ -34,24 +34,24 @@ function start() {
         .then(function (answer) {
             // based on their answer, either call the bid or the post functions
             if (answer.startCommand === "View all employees") {
-                //   postAuction();
+                ViewAllEmployees();
             }
-            if (answer.startCommand === "View all roles") {
+            else if (answer.startCommand === "View all roles") {
                 //   bidAuction();
             }
-            if (answer.startCommand === "View all departments") {
+            else if (answer.startCommand === "View all departments") {
                 //   postAuction();
             }
-            if (answer.startCommand === "Add employee") {
+            else if (answer.startCommand === "Add employee") {
                 CreateNewEmployee();
             }
-            if (answer.startCommand === "Add role") {
+            else if (answer.startCommand === "Add role") {
                 //   postAuction();
             }
-            if (answer.startCommand === "Add department") {
+            else if (answer.startCommand === "Add department") {
                 //   postAuction();
             }
-            if (answer.startCommand === "Update employee role") {
+            else if (answer.startCommand === "Update employee role") {
                 //   postAuction();
             }
             else {
@@ -59,8 +59,16 @@ function start() {
             }
         });
 }
-
-// function to handle posting new items up for auction
+function ViewAllEmployees() {
+   
+    // query the database for all items being auctioned
+    connection.query("SELECT * FROM employee", function (err, results) {
+        if (err) throw err;
+        console.log(cTable.getTable(results));
+        start();
+        // function to handle posting new items up for auction
+    });
+}
 function CreateNewEmployee() {
     // prompt for info about the item being put up for auction
     inquirer
@@ -91,7 +99,7 @@ function CreateNewEmployee() {
         .then(function (answer) {
             // when finished prompting, insert a new item into the db with that info
             connection.query(
-                "INSERT INTO auctions SET ?",
+                "INSERT INTO employee SET ?",
                 {
                     first_name: answer.firstName,
                     last_name: answer.lastName,

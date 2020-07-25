@@ -25,30 +25,17 @@ manager_id INTEGER,
 PRIMARY KEY (id)
 );
 
-
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Ulf", "Erstenschlager", 6, 1);
-
-INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Zilchina", "Alleslieber", 7, 1);
-
-INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Troy", "McCloyerson", 8, 1);
+VALUES ("Ulf", "Erstenschlager", 6, NULL),
+("Zilchina", "Alleslieber", 7, 1),
+("Troy", "McCloyerson", 8, 1);
 
 INSERT INTO role (title, salary, department_id )
-VALUES ("HR Manager", 10000, 1);
-
-INSERT INTO role (title, salary, department_id )
-VALUES ("Interpreter", 30000, 2);
-
-INSERT INTO role (title, salary, department_id )
-VALUES ("Accountant", 50000, 3);
+VALUES ("HR clerk", 10000, 1),
+("Interpreter", 30000, 2),
+("Accountant", 50000, 3);
 
 INSERT INTO department (name)
-VALUES ("Contract Worker");
-
-INSERT INTO department (name)
-VALUES ("Human Resources");
-
-INSERT INTO department (name)
-VALUES ("Accounts Receivable");
+VALUES ("Contract Worker"),
+("Human Resources"),
+("Accounts Receivable");

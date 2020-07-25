@@ -1,0 +1,30 @@
+{
+  "name": "employee_creeper_deluxe",
+  "version": "1.0.0",
+  "description": "creep on yer employees",
+  "main": "employees.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zilchlorf/Employee_Creeper_Deluxe.git"
+  },
+  "keywords": [
+    "Employee",
+    "management",
+    "system",
+    "tracker"
+  ],
+  "author": "Max Edmonds",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zilchlorf/Employee_Creeper_Deluxe/issues"
+  },
+  "homepage": "https://github.com/zilchlorf/Employee_Creeper_Deluxe#readme",
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "inquirer": "^7.3.3",
+    "mysql": "^2.18.1"
+  }
+}

@@ -13,7 +13,7 @@ var connection = mysql.createConnection({
     user: "root",
 
     // Your password
-    password: "",
+    password: "Horsefiend69",
     database: "employees_db"
 });
 
@@ -46,7 +46,7 @@ function start() {
                 CreateNewEmployee();
             }
             else if (answer.startCommand === "Add role") {
-                //   postAuction();
+                CreateNewRole();
             }
             else if (answer.startCommand === "Add department") {
                 //   postAuction();
@@ -62,7 +62,7 @@ function start() {
 function ViewAllEmployees() {
 
     // query the database for all items being auctioned
-    connection.query("SELECT * FROM employee", function (err, results) {
+    connection.query("SELECT employee.id,employee.first_name, employee.last_name,title,salary,employee.manager_id AS \"manager\" FROM employee INNER JOIN role ON employee.role_id = role.id LEFT JOIN employee manager ON employee.manager_id GROUP BY employee.id", function (err, results) {
         if (err) throw err;
         console.log(cTable.getTable(results));
         start();
@@ -89,11 +89,11 @@ function ViewAllDepartments() {
         // function to handle posting new items up for auction
     });
 }
-
+// let roles = ["Contract Worker", "Human Resources", "Accounts Receivable"]
 
 function CreateNewEmployee() {
-let roles = ["Contract Worker", "Human Resources", "Accounts Receivable"]
-let manager = ["No manager","Mrs. Aetch Are", "Sir Meistro Contractor", "Mr. Account Lord" ]
+
+    // let manager = ["No manager", "Mrs. Aetch Are", "Sir Meistro Contractor", "Mr. Account Lord"]
 
     // prompt for info about the item being put up for auction
     inquirer
@@ -110,15 +110,13 @@ let manager = ["No manager","Mrs. Aetch Are", "Sir Meistro Contractor", "Mr. Acc
             },
             {
                 name: "role",
-                type: "list",
-                message: "What is the employee's role?",
-                choices: roles
+                type: "number",
+                message: "What is the employee's role?"
             },
             {
                 name: "manager",
-                type: "list",
-                message: "Who is the employee's manager?",
-                choices: manager
+                type: "number",
+                message: "Who is the employee's manager?"
             }
         ])
         .then(function (answer) {
@@ -140,17 +138,62 @@ let manager = ["No manager","Mrs. Aetch Are", "Sir Meistro Contractor", "Mr. Acc
             );
         });
 }
-const table = cTable.getTable([
-    {
-        name: 'foo',
-        age: 10
-    }, {
-        name: 'bar',
-        age: 20
-    }
-]);
 
-console.log(table);
+function CreateNewRole() {
+    let roles = ["Contract Worker", "Human Resources", "Accounts Receivable"]
+    let departments = connection.query("SELECT * FROM department")
+    // prompt for info about the item being put up for auction
+    inquirer
+        .prompt([
+            {
+                name: "roleTitle",
+                type: "input",
+                message: "What is the title of the new role?"
+            },
+            {
+                name: "salary",
+                type: "number",
+                message: "What will the salary for this role be? [must enter numerical value]"
+            },
+            {
+                name: "department",
+                type: "input",
+                message: "Which department does this new role belong to?"
+
+            }
+        ])
+        .then(function (answer) {
+            results = answer.department;
+            // when finished prompting, insert a new item into the db with that info
+            connection.query(
+                "INSERT INTO role SET ?",
+                {
+                    title: answer.roleTitle,
+                    salary: answer.salary,
+                    department_id: answer.department
+
+                },
+                function (err) {
+                    if (err) throw err;
+                    console.log("New role was created successfully!");
+                    roles.push(results);
+                    start();
+                }
+            );
+        });
+}
+
+// const table = cTable.getTable([
+//     {
+//         name: 'foo',
+//         age: 10
+//     }, {
+//         name: 'bar',
+//         age: 20
+//     }
+// ]);
+
+// console.log(table);
 
   // prints
 //   name  age

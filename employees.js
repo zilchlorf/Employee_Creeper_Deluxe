@@ -13,7 +13,7 @@ var connection = mysql.createConnection({
     user: "root",
 
     // Your password
-    password: "Horsefiend69",
+    password: "",
     database: "employees_db"
 });
 
@@ -32,7 +32,6 @@ function start() {
             choices: ["View all employees", "View all roles", "View all departments", "Add employee", "Add role", "Add department", "Update employee role", "Exit"]
         })
         .then(function (answer) {
-            // based on their answer, either call the bid or the post functions
             if (answer.startCommand === "View all employees") {
                 ViewAllEmployees();
             }
@@ -49,10 +48,10 @@ function start() {
                 CreateNewRole();
             }
             else if (answer.startCommand === "Add department") {
-                //   postAuction();
+                CreateNewDepartment();
             }
             else if (answer.startCommand === "Update employee role") {
-                //   postAuction();
+                updateEmployeeRole();
             }
             else {
                 connection.end();
@@ -62,7 +61,7 @@ function start() {
 function ViewAllEmployees() {
 
     // query the database for all items being auctioned
-    connection.query("SELECT employee.id,employee.first_name, employee.last_name,title,salary,employee.manager_id AS \"manager\" FROM employee INNER JOIN role ON employee.role_id = role.id LEFT JOIN employee manager ON employee.manager_id GROUP BY employee.id", function (err, results) {
+    connection.query("SELECT employee.id,employee.first_name, employee.last_name,title,salary,employee.manager_id AS \"manager\" FROM employee INNER JOIN role ON employee.role_id = role.id LEFT JOIN employee managers ON employee.manager_id = managers.id GROUP BY employee.id ", "SELECT role.*, department_name FROM role INNER JOIN employee ON department.id = role.department_id", function (err, results) {
         if (err) throw err;
         console.log(cTable.getTable(results));
         start();
@@ -72,7 +71,7 @@ function ViewAllEmployees() {
 function ViewAllRoles() {
 
     // query the database for all items being auctioned
-    connection.query("SELECT * FROM role", function (err, results) {
+    connection.query("SELECT role.*, department_name FROM role LEFT JOIN department ON department.id = role.department_id", function (err, results) {
         if (err) throw err;
         console.log(cTable.getTable(results));
         start();
@@ -80,22 +79,18 @@ function ViewAllRoles() {
     });
 }
 function ViewAllDepartments() {
-
-    // query the database for all items being auctioned
     connection.query("SELECT * FROM department", function (err, results) {
         if (err) throw err;
         console.log(cTable.getTable(results));
         start();
-        // function to handle posting new items up for auction
     });
 }
-// let roles = ["Contract Worker", "Human Resources", "Accounts Receivable"]
 
 function CreateNewEmployee() {
 
     // let manager = ["No manager", "Mrs. Aetch Are", "Sir Meistro Contractor", "Mr. Account Lord"]
 
-    // prompt for info about the item being put up for auction
+
     inquirer
         .prompt([
             {
@@ -140,6 +135,7 @@ function CreateNewEmployee() {
 }
 
 function CreateNewRole() {
+
     let roles = ["Contract Worker", "Human Resources", "Accounts Receivable"]
     let departments = connection.query("SELECT * FROM department")
     // prompt for info about the item being put up for auction
@@ -183,22 +179,67 @@ function CreateNewRole() {
         });
 }
 
-// const table = cTable.getTable([
-//     {
-//         name: 'foo',
-//         age: 10
-//     }, {
-//         name: 'bar',
-//         age: 20
-//     }
-// ]);
+function CreateNewDepartment() {
+    let roles = ["Contract Worker", "Human Resources", "Accounts Receivable"]
+    let departments = connection.query("SELECT * FROM department")
+    // prompt for info about the item being put up for auction
+    inquirer
+        .prompt([
+            {
+                name: "NewDepartmentName",
+                type: "input",
+                message: "What is the new department you would like to add?"
+            }
+        ])
+        .then(function (answer) {
+            // results = answer.NewDepartmentName;
+            // when finished prompting, insert a new item into the db with that info
+            connection.query(
+                "INSERT INTO department SET ?",
+                {
+                    department_name: answer.NewDepartmentName
 
-// console.log(table);
+                },
+                function (err) {
+                    if (err) throw err;
+                    console.log("New department was created successfully!");
+                    // NewDepartmentName.push(results);
+                    start();
+                }
+            );
+        });
+}
+function updateEmployeeRole() {
 
-  // prints
-//   name  age
-//   ----  ---
-//   foo   10
-//   bar   20
+    connection.query("SELECT first_name, last_name, id FROM employee",
+        function (err, res) {
 
-//   https://www.npmjs.com/package/console.table
+            let employees = res.map(employee => ({ name: employee.first_name + " " + employee.last_name, value: employee.id }))
+            let roles = res.map(role => ({ name: role.title, value: role.id }))
+            inquirer
+                .prompt([
+                    {
+                        type: "list",
+                        name: "employeeName",
+                        message: "Which employee's role would you like to update?",
+                        choices: employees
+                    },
+                    {
+                        type: "list",
+                        name: "role",
+                        message: "What is your new role?",
+                        choices: roles
+                    }
+                ])
+                .then(function (res) {
+                    connection.query(`UPDATE employee SET role_id = ${res.role} WHERE id = ${res.employeeName}`,
+                        function (err, res) {
+
+                            //updateRole(res);
+                            start();
+                        }
+                    );
+                })
+        }
+    )
+};

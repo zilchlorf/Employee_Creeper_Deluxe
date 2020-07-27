@@ -61,7 +61,7 @@ function start() {
 function ViewAllEmployees() {
 
     // query the database for all items being auctioned
-    connection.query("SELECT employee.id,employee.first_name, employee.last_name,title,salary,employee.manager_id AS \"manager\" FROM employee INNER JOIN role ON employee.role_id = role.id LEFT JOIN employee managers ON employee.manager_id = managers.id GROUP BY employee.id ", "SELECT role.*, department_name FROM role INNER JOIN employee ON department.id = role.department_id", function (err, results) {
+    connection.query("SELECT employee.id,employee.first_name,employee.last_name,title,department_name,salary,employee.manager_id  FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON department.id = role.department_id", function (err, results) {
         if (err) throw err;
         console.log(cTable.getTable(results));
         start();

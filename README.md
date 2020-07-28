@@ -9,6 +9,7 @@ Table of Contents:
 - [tests](#tests)
 - [Questions](#Questions)
 
+![image](https://user-images.githubusercontent.com/63215148/88625486-b1b22700-d05d-11ea-84ea-6082be5077a8.png)
 
 # Project_Description:
 This app enables HR representatives or business owners to maintain a database of their employees 
